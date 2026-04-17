@@ -1,6 +1,6 @@
 # Holocron
 
-Holocron is a lightweight Gemini-only chat app built with Next.js 15, the Vercel AI SDK, and a local-first session store.
+Holocron is a lightweight, production-grade chat client built with Next.js 15, the Vercel AI SDK, and a local-first session store. It follows a **Bring Your Own Key (BYOK)** architecture, keeping your API keys securely in your browser's memory and sending them directly to the server route when you chat.
 
 ## Quick Start
 
@@ -12,15 +12,13 @@ Holocron is a lightweight Gemini-only chat app built with Next.js 15, the Vercel
    ```bash
    npm run dev
    ```
-3. Open `http://localhost:3000`
-4. Add your Google AI API key from **Settings**
+3. Open `http://localhost:xxxx` (or whichever port Next.js uses)
+4. Click the **Settings** icon in the top right to add your Google AI or OpenRouter API key.
 
 ## Current Shape
 
-- Gemini-only model catalog
-- Single `/api/chat` streaming route
-- Single npm workflow with `package-lock.json`
+- Dual-provider model catalog (Google AI + OpenRouter)
+- Single `/api/chat` streaming route that multiplexes requests based on the selected model
 - Session + tab store normalized around one message shape
-- API key is kept in memory only for the current browser session
+- API keys are kept in memory only for the current browser session
 
-See `ARCHITECTURE.md` for the current app shape.

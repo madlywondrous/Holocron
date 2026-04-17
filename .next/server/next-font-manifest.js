@@ -1,0 +1,1 @@
+self.__NEXT_FONT_MANIFEST="{\"pages\":{},\"app\":{\"/Users/ayushh/Developer/Holocron/app/layout\":[\"static/media/d71813c033fbd231-s.p.woff2\",\"static/media/09233c34cd29fb95-s.p.woff2\",\"static/media/d0dacee43b46c338-s.p.woff2\",\"static/media/241edd36d2933bcd-s.p.woff2\"]},\"appUsingSizeAdjust\":true,\"pagesUsingSizeAdjust\":false}"

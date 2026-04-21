@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@ai-sdk/google": "^2.0.40",
-    "@ai-sdk/openai": "^1.0.8",
+    "@ai-sdk/openai": "^2.0.0",
     "@ai-sdk/react": "^2.0.99",
     "ai": "^5.0.99",
     "class-variance-authority": "^0.7.0",

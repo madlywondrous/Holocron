@@ -22,3 +22,4 @@ Holocron is a lightweight, production-grade chat client built with Next.js 15, t
 - Session + tab store normalized around one message shape
 - API keys are kept in memory only for the current browser session
 
+

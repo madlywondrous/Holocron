@@ -1,7 +1,8 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { persist, createJSONStorage } from 'zustand/middleware'
 import { normalizeStoredMessage, type ChatMessage } from '@/lib/chat'
 import { DEFAULT_MODEL, isSupportedModel } from '@/lib/models'
+import { idbStorage } from '@/lib/idb-storage'
 
 export interface ChatTab {
   id: string
@@ -344,6 +345,7 @@ export const useChatStore = create<ChatStore>()(
     }),
     {
       name: 'holocron-chat-store',
+      storage: createJSONStorage(() => idbStorage),
       partialize: (state) => ({
         sessions: state.sessions,
         activeSessionId: state.activeSessionId,

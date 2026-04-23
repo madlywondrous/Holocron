@@ -6,6 +6,29 @@ import { DEFAULT_MODEL, getModelsForProvider, getProviderForModel } from '@/lib/
 import { useAPIKeyStore } from '@/lib/api-key-store'
 import { useChatStore } from '@/lib/store'
 
+function requireProviderKey(model: string, setShowSettings: (show: boolean) => void): boolean {
+  const tabModelProvider = getProviderForModel(model)
+  const storeState = useAPIKeyStore.getState()
+  
+  let key = ''
+  switch(tabModelProvider) {
+    case 'google': key = storeState.googleKey; break;
+    case 'openrouter': key = storeState.openrouterKey; break;
+    case 'openai': key = storeState.openaiKey; break;
+    case 'anthropic': key = storeState.anthropicKey; break;
+    case 'xai': key = storeState.xaiKey; break;
+    case 'groq': key = storeState.groqKey; break;
+  }
+
+  if (!key) {
+    storeState.setProvider(tabModelProvider)
+    setShowSettings(true)
+    return false
+  }
+  
+  return true
+}
+
 export function useChat(sessionId: string, tabId: string) {
   const { sessions, updateTab, renameTab, setShowSettings } = useChatStore()
   const provider = useAPIKeyStore((state) => state.provider)
@@ -28,13 +51,22 @@ export function useChat(sessionId: string, tabId: string) {
         headers: () => {
           const store = useAPIKeyStore.getState()
           const headers = new Headers()
+          
+          const currentSession = useChatStore.getState().sessions.find(
+            (candidateSession) => candidateSession.id === sessionId,
+          )
+          const currentTab = currentSession?.tabs.find((candidateTab) => candidateTab.id === tabId)
+          const model = currentTab?.model ?? DEFAULT_MODEL
+          const modelProvider = getProviderForModel(model)
 
-          // Send both keys — the server will pick the right one based on model
-          if (store.googleKey) {
-            headers.set('X-Google-API-Key', store.googleKey)
-          }
-          if (store.openrouterKey) {
-            headers.set('X-OpenRouter-API-Key', store.openrouterKey)
+          // Only send the specific key required for the active model
+          switch (modelProvider) {
+            case 'google': if (store.googleKey) headers.set('X-Google-API-Key', store.googleKey); break;
+            case 'openrouter': if (store.openrouterKey) headers.set('X-OpenRouter-API-Key', store.openrouterKey); break;
+            case 'openai': if (store.openaiKey) headers.set('X-OpenAI-API-Key', store.openaiKey); break;
+            case 'anthropic': if (store.anthropicKey) headers.set('X-Anthropic-API-Key', store.anthropicKey); break;
+            case 'xai': if (store.xaiKey) headers.set('X-xAI-API-Key', store.xaiKey); break;
+            case 'groq': if (store.groqKey) headers.set('X-Groq-API-Key', store.groqKey); break;
           }
 
           return headers
@@ -67,11 +99,16 @@ export function useChat(sessionId: string, tabId: string) {
     transport,
   })
 
-  // Has at least one key for the current provider
-  const hasApiKey = (() => {
-    const store = useAPIKeyStore.getState()
-    return store.googleKey.length > 0 || store.openrouterKey.length > 0
-  })()
+  const hasAnyKey = useAPIKeyStore((state) => 
+    state.googleKey.length > 0 || 
+    state.openrouterKey.length > 0 || 
+    state.openaiKey.length > 0 || 
+    state.anthropicKey.length > 0 || 
+    state.xaiKey.length > 0 || 
+    state.groqKey.length > 0
+  )
+  
+  const hasApiKey = hasAnyKey
 
   const isLoading = status === 'submitted' || status === 'streaming'
 
@@ -95,14 +132,7 @@ export function useChat(sessionId: string, tabId: string) {
 
   const sendMessage = useCallback(
     async (content: string) => {
-      if (!tab) {
-        return
-      }
-
-      if (!hasApiKey) {
-        setShowSettings(true)
-        return
-      }
+      if (!tab || !requireProviderKey(tab.model, setShowSettings)) return
 
       if (tab.name === 'New Tab' && messages.length === 0) {
         const preview = content.trim().slice(0, 30)
@@ -116,19 +146,15 @@ export function useChat(sessionId: string, tabId: string) {
         },
       })
     },
-    [hasApiKey, messages.length, renameTab, sendChatMessage, sessionId, setShowSettings, tab, tabId],
+    [messages.length, renameTab, sendChatMessage, sessionId, setShowSettings, tab, tabId],
   )
 
   const regenerateResponse = useCallback(
     async (messageId?: string) => {
-      if (!hasApiKey) {
-        setShowSettings(true)
-        return
-      }
-
+      if (!requireProviderKey(tab?.model ?? DEFAULT_MODEL, setShowSettings)) return
       await regenerate(messageId ? { messageId } : undefined)
     },
-    [hasApiKey, regenerate, setShowSettings],
+    [regenerate, setShowSettings, tab?.model],
   )
 
   const deleteTurn = useCallback(
@@ -137,6 +163,29 @@ export function useChat(sessionId: string, tabId: string) {
       setMessages((currentMessages) => currentMessages.filter((message) => !idsToRemove.has(message.id)))
     },
     [setMessages],
+  )
+
+  const editMessage = useCallback(
+    async (messageId: string, newContent: string) => {
+      if (!requireProviderKey(tab?.model ?? DEFAULT_MODEL, setShowSettings)) return
+
+      // Find where this message is in the history
+      const index = messages.findIndex(m => m.id === messageId)
+      if (index === -1) return
+
+      // Truncate history to right before the edited message
+      const previousMessages = messages.slice(0, index)
+      setMessages(previousMessages)
+
+      // Send the new message, which will append to the newly truncated history
+      await sendChatMessage({
+        text: newContent,
+        metadata: {
+          createdAt: new Date().toISOString(),
+        },
+      })
+    },
+    [messages, setMessages, sendChatMessage, setShowSettings, tab?.model]
   )
 
   const changeModel = useCallback(
@@ -165,6 +214,7 @@ export function useChat(sessionId: string, tabId: string) {
     isLoading,
     error: error?.message ?? null,
     sendMessage,
+    editMessage,
     regenerateResponse,
     deleteTurn,
     changeModel,

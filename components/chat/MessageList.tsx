@@ -18,6 +18,7 @@ interface MessageListProps {
   isLoading: boolean
   onDeleteTurn?: (messageIds: string[]) => void
   onRegenerateResponse?: (messageId?: string) => void
+  onEditMessage?: (messageId: string, newContent: string) => void
 }
 
 interface ConversationPair {
@@ -41,7 +42,7 @@ interface ConversationPair {
  *    re-attach + smooth scroll to bottom regardless.
  */
 export const MessageList = forwardRef<HTMLDivElement, MessageListProps>(function MessageList(
-  { messages, modelId, isLoading, onDeleteTurn, onRegenerateResponse },
+  { messages, modelId, isLoading, onDeleteTurn, onRegenerateResponse, onEditMessage },
   ref,
 ) {
   const { addToast } = useAppToast()
@@ -159,6 +160,7 @@ export const MessageList = forwardRef<HTMLDivElement, MessageListProps>(function
                   isLoading={isLoading && pairIndex === pairs.length - 1}
                   onDeleteTurn={onDeleteTurn}
                   onRegenerateResponse={onRegenerateResponse}
+                  onEditMessage={onEditMessage}
                   onToast={addToast}
                   messageIds={pairMessageIds}
                 />
@@ -199,6 +201,7 @@ interface ConversationPairCardProps {
   messageIds: string[]
   onDeleteTurn?: (messageIds: string[]) => void
   onRegenerateResponse?: (messageId?: string) => void
+  onEditMessage?: (messageId: string, newContent: string) => void
   onToast?: (message: string, type?: 'success' | 'error' | 'info', duration?: number) => void
 }
 
@@ -210,19 +213,59 @@ const ConversationPairCard = React.memo(function ConversationPairCard({
   messageIds,
   onDeleteTurn,
   onRegenerateResponse,
+  onEditMessage,
   onToast,
 }: ConversationPairCardProps) {
+  const [isEditing, setIsEditing] = useState(false)
   const conversationId = userMessage?.id ?? assistantMessage?.id
   const assistantText = assistantMessage ? getMessageText(assistantMessage) : ''
   const userText = userMessage ? getMessageText(userMessage) : ''
+  const [editValue, setEditValue] = useState(userText)
   const modelLabel = getModelInfo(modelId).label
 
   return (
     <div id={conversationId ? `message-${conversationId}` : undefined} className="animate-in slide-in-from-bottom-4 fade-in duration-500">
       <div className="rounded-lg border border-border/40 bg-card p-4 shadow-sm">
         {userMessage && (
-          <div className="mb-3">
-            <p className="break-words text-lg font-semibold leading-relaxed text-foreground sm:text-xl">{userText}</p>
+          <div className="mb-3 group relative">
+            {isEditing ? (
+              <div className="space-y-3">
+                <textarea
+                  value={editValue}
+                  onChange={(e) => setEditValue(e.target.value)}
+                  className="w-full resize-none rounded-md bg-muted/30 p-3 text-lg font-semibold leading-relaxed text-foreground sm:text-xl outline-none focus:ring-1 focus:ring-primary/50"
+                  rows={Math.min(5, editValue.split('\n').length || 1)}
+                  autoFocus
+                />
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={() => {
+                      setIsEditing(false)
+                      setEditValue(userText)
+                    }}
+                    className="rounded bg-muted px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted/80"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (editValue.trim() !== userText) {
+                        onEditMessage?.(userMessage.id, editValue.trim())
+                      }
+                      setIsEditing(false)
+                    }}
+                    disabled={!editValue.trim() || isLoading}
+                    className="rounded bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
+                  >
+                    Save & Submit
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <p className="break-words text-lg font-semibold leading-relaxed text-foreground sm:text-xl">{userText}</p>
+              </>
+            )}
           </div>
         )}
 
@@ -245,20 +288,32 @@ const ConversationPairCard = React.memo(function ConversationPairCard({
         <div className="mt-3 flex items-center justify-between px-4">
           <div className="flex items-center gap-2">
             <span className="text-base font-medium text-foreground">{modelLabel}</span>
-            <button
-              onClick={() => {
-                onRegenerateResponse?.(assistantMessage.id)
-                onToast?.('Regenerating response...', 'info')
-              }}
-              disabled={isLoading}
-              className="flex items-center gap-1.5 rounded border border-border/50 bg-card px-2 py-1 text-sm text-muted-foreground transition-all duration-200 hover:scale-105 hover:bg-muted/30 hover:text-foreground active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
-              title="Regenerate response"
-            >
-              <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-              </svg>
-              Rewrite
-            </button>
+            <div className="flex items-center gap-1 ml-2">
+              {!isLoading && userMessage && (
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="flex h-8 w-8 items-center justify-center rounded border border-border/50 bg-card text-muted-foreground transition-all duration-200 hover:scale-110 hover:bg-muted/30 hover:text-foreground active:scale-95"
+                  title="Edit prompt"
+                >
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
+                </button>
+              )}
+              <button
+                onClick={() => {
+                  onRegenerateResponse?.(assistantMessage.id)
+                  onToast?.('Regenerating response...', 'info')
+                }}
+                disabled={isLoading}
+                className="flex h-8 w-8 items-center justify-center rounded border border-border/50 bg-card text-muted-foreground transition-all duration-200 hover:scale-110 hover:bg-muted/30 hover:text-foreground active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+                title="Regenerate response"
+              >
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+              </button>
+            </div>
           </div>
 
           <div className="flex items-center gap-1">

@@ -12,7 +12,7 @@ interface ChatContainerProps {
 }
 
 export function ChatContainer({ sessionId, tabId }: ChatContainerProps) {
-  const { tab, messages, models, hasApiKey, isLoading, error, sendMessage, regenerateResponse, deleteTurn, changeModel, stop } = useChat(
+  const { tab, messages, models, hasApiKey, isLoading, error, sendMessage, editMessage, regenerateResponse, deleteTurn, changeModel, stop } = useChat(
     sessionId,
     tabId,
   )
@@ -34,9 +34,9 @@ export function ChatContainer({ sessionId, tabId }: ChatContainerProps) {
         <div className="max-w-md text-center space-y-4">
           <Image src="/holocron-icon.png" alt="Holocron" width={64} height={64} className="mx-auto h-16 w-16" />
           <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-foreground">Add your Gemini key</h3>
+            <h3 className="text-lg font-semibold text-foreground">Add your API key</h3>
             <p className="text-sm text-muted-foreground/80">
-              Holocron keeps the key in memory for this browser session only, then sends it directly to the server route when you chat.
+              Holocron keeps your keys securely stored locally in the browser.
             </p>
           </div>
           <button
@@ -69,6 +69,7 @@ export function ChatContainer({ sessionId, tabId }: ChatContainerProps) {
             isLoading={isLoading}
             onDeleteTurn={deleteTurn}
             onRegenerateResponse={regenerateResponse}
+            onEditMessage={editMessage}
           />
 
           {/* Floating input — sits at the bottom above the message list */}

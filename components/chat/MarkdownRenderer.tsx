@@ -1,8 +1,11 @@
 import React, { useMemo, useState, useCallback } from 'react'
 import ReactMarkdown, { type Components, type Options as ReactMarkdownOptions } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
 import rehypeHighlight from 'rehype-highlight'
+import rehypeKatex from 'rehype-katex'
 import { cn } from '@/lib/utils'
+import 'katex/dist/katex.min.css' // Import KaTeX styles for math rendering
 
 interface MarkdownRendererProps {
   content: string
@@ -139,7 +142,11 @@ const markdownComponents: Components = {
   ),
 }
 
-const rehypePlugins = [rehypeHighlight] as unknown as NonNullable<ReactMarkdownOptions['rehypePlugins']>
+const rehypePlugins = [
+  [rehypeHighlight, { ignoreMissing: true }],
+  rehypeKatex
+] as unknown as NonNullable<ReactMarkdownOptions['rehypePlugins']>
+const remarkPlugins = [remarkGfm, remarkMath] as unknown as NonNullable<ReactMarkdownOptions['remarkPlugins']>
 
 export function MarkdownRenderer({ content, className }: MarkdownRendererProps) {
   const processedContent = useMemo(() => {
@@ -156,7 +163,7 @@ export function MarkdownRenderer({ content, className }: MarkdownRendererProps) 
 
   return (
     <div className={cn('markdown-body text-base leading-relaxed', className)}>
-      <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={rehypePlugins} components={markdownComponents}>
+      <ReactMarkdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins} components={markdownComponents}>
         {processedContent}
       </ReactMarkdown>
     </div>

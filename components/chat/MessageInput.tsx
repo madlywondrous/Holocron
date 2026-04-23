@@ -17,7 +17,7 @@ interface MessageInputProps {
   allowCustomModel?: boolean
 }
 
-export function MessageInput({
+export const MessageInput = React.memo(function MessageInput({
   onSendMessage,
   onModelChange,
   onStop,
@@ -253,4 +253,4 @@ export function MessageInput({
       </div>
     </form>
   )
-}
+})

@@ -20,6 +20,6 @@ Holocron is a lightweight, production-grade chat client built with Next.js 15, t
 - Dual-provider model catalog (Google AI + OpenRouter)
 - Single `/api/chat` streaming route that multiplexes requests based on the selected model
 - Session + tab store normalized around one message shape
-- API keys are kept in memory only for the current browser session
+- API keys are kept in memory only for the current browser session.
 
 

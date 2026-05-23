@@ -30,21 +30,34 @@ export function ChatContainer({ sessionId, tabId }: ChatContainerProps) {
 
   if (!hasApiKey) {
     return (
-      <div className="flex flex-1 items-center justify-center p-8 text-muted-foreground">
-        <div className="max-w-md text-center space-y-4">
-          <Image src="/holocron-icon.png" alt="Holocron" width={64} height={64} className="mx-auto h-16 w-16" />
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-foreground">Add your API key</h3>
-            <p className="text-sm text-muted-foreground/80">
-              Holocron keeps your keys securely stored locally in the browser.
+      <div className="relative flex flex-1 items-center justify-center p-8 text-muted-foreground animate-in fade-in duration-700">
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-grid-white/[0.02] bg-[size:60px_60px]">
+          <div className="absolute inset-0 bg-background/90 [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
+        </div>
+        
+        <div className="relative max-w-lg text-center space-y-8 z-10">
+          <div className="space-y-6">
+            <div className="w-full flex justify-center">
+              <pre className="text-[0.85rem] sm:text-xl md:text-3xl lg:text-4xl font-mono text-logo-gradient font-bold select-none text-left overflow-visible" style={{ lineHeight: 1.05 }}>
+{`█  █ █▀▀█ █    █▀▀█ █▀▀▀ █▀▀█ █▀▀█ █▄ █
+█▀▀█ █  █ █    █  █ █    █▀▀▄ █  █ █ ▀█
+▀  ▀ ▀▀▀▀ ▀▀▀▀ ▀▀▀▀ ▀▀▀▀ ▀  ▀ ▀▀▀▀ ▀  ▀`}
+              </pre>
+            </div>
+            <p className="text-base text-muted-foreground/80 max-w-[80%] mx-auto leading-relaxed mt-4">
+              Experience the next generation of AI chat. Add your API key to unlock powerful local models securely stored in your browser.
             </p>
           </div>
-          <button
-            onClick={() => setShowSettings(true)}
-            className="rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Open Settings
-          </button>
+          
+          <div className="pt-4">
+            <button
+              onClick={() => setShowSettings(true)}
+              className="rounded-full bg-foreground px-8 py-3.5 text-sm font-semibold text-background shadow-lg shadow-foreground/10 transition-all hover:bg-foreground/90 hover:scale-105 active:scale-95 flex items-center gap-2 mx-auto"
+            >
+              <span className="material-symbols-outlined text-[18px]">key</span>
+              Configure API Key
+            </button>
+          </div>
         </div>
       </div>
     )
@@ -93,22 +106,52 @@ export function ChatContainer({ sessionId, tabId }: ChatContainerProps) {
           </div>
         </>
       ) : (
-        <div className="flex flex-1 min-h-0 items-center justify-center p-4">
-          <div className="w-full max-w-2xl">
-            <div className="mb-8 text-center">
-              <h2 className="mb-2 text-2xl font-semibold text-foreground">Start a conversation</h2>
-              <p className="text-muted-foreground">Ask a question and Holocron will stream the answer back.</p>
+        <div className="relative flex flex-1 min-h-0 items-center justify-center p-4 animate-in fade-in duration-700">
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-grid-white/[0.02] bg-[size:60px_60px]">
+            <div className="absolute inset-0 bg-background/90 [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
+          </div>
+
+          <div className="relative w-full max-w-3xl z-10 flex flex-col items-center">
+            <div className="mb-12 text-center space-y-6">
+              <div className="w-full flex justify-center">
+                <pre className="text-[0.85rem] sm:text-xl md:text-3xl lg:text-4xl font-mono text-logo-gradient font-bold select-none text-left overflow-visible" style={{ lineHeight: 1.05 }}>
+{`█  █ █▀▀█ █    █▀▀█ █▀▀▀ █▀▀█ █▀▀█ █▄ █
+█▀▀█ █  █ █    █  █ █    █▀▀▄ █  █ █ ▀█
+▀  ▀ ▀▀▀▀ ▀▀▀▀ ▀▀▀▀ ▀▀▀▀ ▀  ▀ ▀▀▀▀ ▀  ▀`}
+                </pre>
+              </div>
+              <p className="text-sm font-medium text-muted-foreground uppercase tracking-widest mt-4">What can I help you with?</p>
             </div>
-            <MessageInput
-              onSendMessage={sendMessage}
-              onModelChange={changeModel}
-              placeholder={activeProvider === 'openrouter' ? 'Ask anything...' : 'Ask Gemini anything...'}
-              modelId={tab.model}
-              availableModels={models}
-              isLoading={isLoading}
-              allowCustomModel={activeProvider === 'openrouter'}
-              centered
-            />
+            
+            <div className="w-full max-w-2xl mb-8">
+              <MessageInput
+                onSendMessage={sendMessage}
+                onModelChange={changeModel}
+                placeholder={activeProvider === 'openrouter' ? 'Ask anything...' : 'Ask Gemini anything...'}
+                modelId={tab.model}
+                availableModels={models}
+                isLoading={isLoading}
+                allowCustomModel={activeProvider === 'openrouter'}
+                centered
+              />
+            </div>
+            
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-2xl mt-4">
+              {[
+                { icon: 'code', text: 'Write code' },
+                { icon: 'edit_document', text: 'Draft an essay' },
+                { icon: 'lightbulb', text: 'Brainstorm ideas' },
+                { icon: 'analytics', text: 'Analyze data' },
+              ].map((suggestion, i) => (
+                <button 
+                  key={i}
+                  className="flex flex-col items-center gap-2 rounded-2xl border border-border/40 bg-secondary/20 p-4 text-muted-foreground hover:bg-secondary/60 hover:text-foreground transition-all duration-200"
+                >
+                  <span className="material-symbols-outlined text-[20px] opacity-70">{suggestion.icon}</span>
+                  <span className="text-xs font-medium">{suggestion.text}</span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       )}

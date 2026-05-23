@@ -106,7 +106,7 @@ export const MessageInput = React.memo(function MessageInput({
             alt="Holocron"
             width={28}
             height={28}
-            className="-mt-0.5 h-7 w-7 flex-shrink-0"
+            className="-mt-0.5 h-7 w-7 flex-shrink-0 invert dark:invert-0 opacity-80"
           />
           <div className="min-w-0 flex-1">
             <textarea

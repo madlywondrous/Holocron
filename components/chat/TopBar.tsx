@@ -62,10 +62,14 @@ export function TopBar({ onToggleTimeline, showTimeline }: TopBarProps = {}) {
             variant="ghost"
             size="icon"
             onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="h-8 w-8 flex-shrink-0 text-muted-foreground transition-all duration-200"
+            className="group h-8 w-8 flex-shrink-0 text-muted-foreground transition-all duration-200"
             aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
-            <span className="material-symbols-outlined text-2xl">{sidebarCollapsed ? 'dock_to_right' : 'dock_to_left'}</span>
+            <img src="/holocron-icon.png" alt="App Icon" className="h-[22px] w-[22px] invert dark:invert-0 opacity-80 group-hover:hidden transition-opacity" />
+            <span className="material-symbols-outlined text-2xl hidden group-hover:block">
+              {sidebarCollapsed ? 'dock_to_right' : 'dock_to_left'}
+            </span>
           </Button>
 
           <div className="flex min-w-0 items-center text-base font-semibold uppercase text-foreground">
@@ -84,6 +88,7 @@ export function TopBar({ onToggleTimeline, showTimeline }: TopBarProps = {}) {
             onClick={handleOpenSettings}
             className="h-8 w-8 text-muted-foreground transition-all duration-200"
             aria-label="Open settings"
+            title="Settings"
           >
             <span className="material-symbols-outlined text-[20px]">settings</span>
           </Button>
@@ -98,6 +103,7 @@ export function TopBar({ onToggleTimeline, showTimeline }: TopBarProps = {}) {
                 showTimeline ? 'bg-secondary text-foreground ring-2 ring-primary/50' : '',
               )}
               aria-label="Toggle chat navigation"
+              title="Timeline"
             >
               <span className="material-symbols-outlined text-2xl">timeline</span>
             </Button>

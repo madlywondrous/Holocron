@@ -40,12 +40,13 @@ export function ThemeToggle() {
           open && "bg-secondary text-foreground"
         )}
         aria-label="Toggle theme"
+        title="Theme options"
       >
         <SlidersHorizontal size={18} />
       </Button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-4 w-[240px] rounded-2xl border border-border/40 bg-card/80 backdrop-blur-2xl p-2 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 zoom-in-95 duration-200">
+        <div className="absolute right-0 top-full mt-4 w-[240px] rounded-2xl border border-border/60 bg-card/95 backdrop-blur-3xl p-2 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 zoom-in-95 duration-200">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium pl-2 text-foreground/80 tracking-wide">Theme</span>
             

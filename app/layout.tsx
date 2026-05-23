@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Tomorrow } from 'next/font/google'
+import { Tomorrow, Press_Start_2P } from 'next/font/google'
 import { ErrorBoundary } from '@/components/chat/ErrorBoundary'
 import { MainLayout } from '@/components/chat/MainLayout'
 import { ThemeProvider } from '@/components/providers'
@@ -10,6 +10,13 @@ const tomorrow = Tomorrow({
   display: 'swap',
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
+})
+
+const pixelFont = Press_Start_2P({
+  display: 'swap',
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-pixel',
 })
 
 export const metadata: Metadata = {
@@ -27,7 +34,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={tomorrow.className}>
+      <body className={`${tomorrow.className} ${pixelFont.variable}`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ErrorBoundary>
             <MainLayout>{children}</MainLayout>

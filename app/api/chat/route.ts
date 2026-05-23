@@ -48,7 +48,8 @@ function createModelInstance(provider: string, modelId: string, apiKey: string, 
     case 'google':
     default: {
       const google = createGoogleGenerativeAI({ apiKey })
-      return google(modelId)
+      const useSearchGrounding = modelId.includes('flash') ? true : undefined
+      return google(modelId, { useSearchGrounding })
     }
   }
 }
@@ -111,7 +112,8 @@ export async function POST(req: Request) {
       },
       onError: (error) => {
         console.error('Chat API error:', error)
-        return 'Something went wrong while generating a response.'
+        const errorMessage = error instanceof Error ? error.message : String(error)
+        return `API Error: ${errorMessage}`
       },
     })
   } catch (error) {

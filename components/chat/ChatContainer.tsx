@@ -86,10 +86,12 @@ export function ChatContainer({ sessionId, tabId }: ChatContainerProps) {
           />
 
           {/* Floating input — sits at the bottom above the message list */}
-          <div className="absolute bottom-0 left-0 right-0 z-30">
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background via-background/80 to-transparent" />
-            <div className="relative mx-auto max-w-4xl px-4 pb-6 sm:px-6">
-              <div className="pointer-events-auto rounded-3xl border border-border/30 bg-background/20 p-2 shadow-2xl shadow-black/30 backdrop-blur-xl">
+          <div className="absolute bottom-0 left-0 right-0 z-30 pt-12 pb-6">
+            {/* iOS-style borderless blur fade */}
+            <div className="pointer-events-none absolute inset-0 backdrop-blur-xl bg-background/40 [mask-image:linear-gradient(to_top,black_70%,transparent)]" />
+            
+            <div className="relative mx-auto max-w-4xl px-4 sm:px-6">
+              <div className="pointer-events-auto rounded-3xl border border-border/60 bg-background/95 p-2 shadow-[0_0_40px_-10px_rgba(0,0,0,0.3)] backdrop-blur-md ring-1 ring-foreground/5 transition-all hover:shadow-[0_0_40px_-10px_rgba(0,0,0,0.4)]">
                 <MessageInput
                   onSendMessage={sendMessage}
                   onModelChange={changeModel}

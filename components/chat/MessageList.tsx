@@ -172,10 +172,10 @@ export const MessageList = forwardRef<HTMLDivElement, MessageListProps>(function
 
       {/* Scroll-to-bottom pill */}
       {showScrollButton && (
-        <div className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2">
+        <div className="absolute bottom-[150px] left-1/2 z-40 -translate-x-1/2">
           <button
             onClick={scrollToBottom}
-            className="flex items-center gap-2 rounded-full border border-border/40 bg-background/90 px-4 py-2 text-sm font-medium text-foreground shadow-lg backdrop-blur-md transition-all duration-200 hover:bg-muted/80 hover:shadow-xl active:scale-95"
+            className="flex items-center gap-2 rounded-full border border-border/60 bg-background/95 px-4 py-2 text-sm font-medium text-foreground shadow-[0_0_40px_-10px_rgba(0,0,0,0.3)] backdrop-blur-md ring-1 ring-foreground/5 transition-all duration-200 hover:bg-muted/50 hover:shadow-[0_0_40px_-10px_rgba(0,0,0,0.4)] active:scale-95"
             title="Scroll to bottom"
           >
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

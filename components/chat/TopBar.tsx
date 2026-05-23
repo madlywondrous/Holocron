@@ -61,7 +61,7 @@ export function TopBar({ onToggleTimeline, showTimeline }: TopBarProps = {}) {
             variant="ghost"
             size="icon"
             onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="h-8 w-8 flex-shrink-0 text-foreground transition-all duration-200 hover:bg-muted/50 hover:text-foreground"
+            className="h-8 w-8 flex-shrink-0 text-muted-foreground transition-all duration-200"
             aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             <span className="material-symbols-outlined text-2xl">{sidebarCollapsed ? 'dock_to_right' : 'dock_to_left'}</span>
@@ -78,31 +78,11 @@ export function TopBar({ onToggleTimeline, showTimeline }: TopBarProps = {}) {
           <Button
             variant="ghost"
             size="icon"
-            onClick={handleOpenSessions}
-            className="h-8 w-8 rounded-md text-muted-foreground transition-all duration-200 hover:bg-muted/50 hover:text-foreground"
-            aria-label="Open sessions (⌘/)"
-          >
-            <span className="material-symbols-outlined text-2xl">workspaces</span>
-          </Button>
-
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleOpenSearch}
-            className="h-8 w-8 rounded-md text-muted-foreground transition-all duration-200 hover:bg-muted/50 hover:text-foreground"
-            aria-label="Search (⌘K)"
-          >
-            <span className="material-symbols-outlined text-2xl">search</span>
-          </Button>
-
-          <Button
-            variant="ghost"
-            size="icon"
             onClick={handleOpenSettings}
-            className="h-8 w-8 rounded-md text-muted-foreground transition-all duration-200 hover:bg-muted/50 hover:text-foreground"
+            className="h-8 w-8 text-muted-foreground transition-all duration-200"
             aria-label="Open settings"
           >
-            <span className="material-symbols-outlined text-2xl">vpn_key</span>
+            <span className="material-symbols-outlined text-[20px]">settings</span>
           </Button>
 
           {onToggleTimeline && activeSession && (
@@ -111,8 +91,8 @@ export function TopBar({ onToggleTimeline, showTimeline }: TopBarProps = {}) {
               size="icon"
               onClick={onToggleTimeline}
               className={cn(
-                'h-8 w-8 rounded-md transition-all duration-200',
-                showTimeline ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground',
+                'h-8 w-8 rounded-md text-muted-foreground transition-all duration-200',
+                showTimeline ? 'bg-secondary text-foreground ring-2 ring-primary/50' : '',
               )}
               aria-label="Toggle chat navigation"
             >

@@ -106,10 +106,10 @@ export const MessageList = forwardRef<HTMLDivElement, MessageListProps>(function
 
       // Small delay so the DOM has painted the new message card
       requestAnimationFrame(() => {
-        scrollRef.current?.scrollTo({
-          top: scrollRef.current.scrollHeight,
-          behavior: 'smooth',
-        })
+        const el = scrollRef.current
+        if (el) {
+          el.scrollTop = el.scrollHeight
+        }
       })
     }
   }, [messages.length])

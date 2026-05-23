@@ -50,8 +50,8 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: (id: string) =
   return (
     <div
       className={cn(
-        'pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg border backdrop-blur-md transition-all duration-300',
-        'max-w-sm w-full',
+        'pointer-events-auto flex items-center gap-2.5 px-3 py-2.5 rounded-md shadow-md border backdrop-blur-md transition-all duration-300',
+        'w-auto min-w-[200px] max-w-xs',
         {
           'bg-card/95 border-green-500/50 text-foreground': toast.type === 'success',
           'bg-card/95 border-destructive/50 text-foreground': toast.type === 'error',
@@ -62,28 +62,28 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: (id: string) =
     >
       <div className="flex-shrink-0">
         {toast.type === 'success' && (
-          <div className="w-5 h-5 rounded-full bg-green-500/10 flex items-center justify-center">
-            <svg className="w-3 h-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-4 h-4 rounded-full bg-green-500/10 flex items-center justify-center">
+            <svg className="w-2.5 h-2.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
         )}
         {toast.type === 'error' && (
-          <div className="w-5 h-5 rounded-full bg-destructive/10 flex items-center justify-center">
-            <svg className="w-3 h-3 text-destructive" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-4 h-4 rounded-full bg-destructive/10 flex items-center justify-center">
+            <svg className="w-2.5 h-2.5 text-destructive" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </div>
         )}
         {toast.type === 'info' && (
-          <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center">
-            <svg className="w-3 h-3 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-4 h-4 rounded-full bg-primary/10 flex items-center justify-center">
+            <svg className="w-2.5 h-2.5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
         )}
       </div>
-      <p className="text-base font-medium flex-1">{toast.message}</p>
+      <p className="text-sm font-medium flex-1 leading-tight">{toast.message}</p>
       <button
         onClick={handleRemove}
         className="flex-shrink-0 w-5 h-5 flex items-center justify-center rounded hover:bg-muted transition-colors"

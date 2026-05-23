@@ -120,6 +120,7 @@ export const MessageInput = React.memo(function MessageInput({
                 }
               }}
               placeholder={placeholder}
+              aria-label="Message input"
               disabled={isLoading}
               className="min-h-[20px] max-h-[150px] w-full resize-none border-none bg-transparent text-base leading-5 text-foreground outline-none transition-all duration-200 placeholder:text-muted-foreground focus:ring-0 disabled:opacity-50"
               rows={1}
@@ -141,9 +142,9 @@ export const MessageInput = React.memo(function MessageInput({
               type="submit"
               disabled={isLoading || !inputValue.trim()}
               className={cn(
-                'flex h-9 w-9 items-center justify-center rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/20',
+                'flex h-9 w-9 items-center justify-center rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-secondary/20',
                 inputValue.trim() && !isLoading
-                  ? 'bg-primary text-primary-foreground shadow-sm hover:scale-105 hover:bg-primary/90 hover:shadow-md'
+                  ? 'bg-secondary text-secondary-foreground shadow-sm hover:scale-105 hover:bg-secondary/90 hover:shadow-md'
                   : 'cursor-not-allowed bg-muted/60 text-muted-foreground',
               )}
               title={isLoading ? 'Sending...' : 'Send message'}
@@ -203,6 +204,7 @@ export const MessageInput = React.memo(function MessageInput({
                       value={isCustomModel ? '__custom__' : modelId}
                       onChange={(event) => handleModelSelectChange(event.target.value)}
                       disabled={isLoading}
+                      aria-label="Select model"
                       className="appearance-none rounded bg-transparent pr-6 text-base font-medium text-foreground outline-none transition-colors hover:text-primary focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {availableModels.map((model) => (

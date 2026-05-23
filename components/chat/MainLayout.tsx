@@ -1,7 +1,7 @@
 'use client'
 
 import { Sidebar } from '@/components/chat/Sidebar'
-import { SettingsPopup } from '@/components/chat/SettingsPopup'
+import { SettingsView } from '@/components/chat/SettingsView'
 import { SessionsSpotlight } from '@/components/chat/SessionsSpotlight'
 import { SearchSpotlight } from '@/components/chat/SearchSpotlight'
 import { TopBar } from '@/components/chat/TopBar'
@@ -156,7 +156,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
             showTimeline={showTimeline}
           />
           <ToastContainer toasts={toast.toasts} onRemove={toast.removeToast} />
-          <SettingsPopup isOpen={showSettings} onClose={() => setShowSettings(false)} />
+          <SettingsView />
           <SessionsSpotlight />
           <SearchSpotlight />
 
@@ -164,7 +164,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
             <aside
               className={cn(
                 'transition-all duration-300 ease-in-out overflow-hidden flex-shrink-0 min-h-0',
-                sidebarCollapsed ? 'w-0' : 'w-64'
+                sidebarCollapsed ? 'w-0' : 'w-[333px]'
               )}
               onMouseEnter={() => {
                 // Cancel any pending close timer when entering sidebar

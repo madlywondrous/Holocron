@@ -147,27 +147,35 @@
 
 @layer base {
   :root {
-    /* Dark theme with gray/black and dark cyan accents */
-    --background: 0 0% 7%;            /* Near black */
-    --foreground: 0 0% 95%;           /* Light gray text */
-    --card: 0 0% 10%;                 /* Dark gray card */
-    --card-foreground: 0 0% 95%;
-    --popover: 0 0% 12%;
-    --popover-foreground: 0 0% 95%;
-    --primary: 180 65% 45%;           /* Dark cyan */
-    --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 95%;
-    --muted: 0 0% 17%;
+    /* Opencode-inspired sleek dark theme */
+    --background: 0 0% 3%;            /* Near pure black */
+    --foreground: 0 0% 93%;           /* Soft white text */
+    --card: 0 0% 6%;                  /* Very dark gray card */
+    --card-foreground: 0 0% 93%;
+    --popover: 0 0% 6%;
+    --popover-foreground: 0 0% 93%;
+    
+    /* Primary buttons (White) */
+    --primary: 0 0% 93%;
+    --primary-foreground: 0 0% 9%;
+    
+    /* Secondary/Muted */
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 93%;
+    --muted: 0 0% 12%;
     --muted-foreground: 0 0% 60%;
-    --accent: 180 65% 45%;            /* Dark cyan accent */
-    --accent-foreground: 0 0% 100%;
+    
+    /* Accent (Subtle highlight) */
+    --accent: 0 0% 15%;            
+    --accent-foreground: 0 0% 93%;
+    
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 95%;
-    --border: 0 0% 20%;               /* Subtle gray borders */
-    --input: 0 0% 20%;
-    --ring: 180 65% 45%;              /* Cyan focus ring */
-    --radius: 0.5rem;
+    --destructive-foreground: 0 0% 93%;
+    
+    --border: 0 0% 15%;               /* Subtle, tight borders */
+    --input: 0 0% 15%;
+    --ring: 0 0% 93%;                 /* White focus ring */
+    --radius: 0.35rem;                /* Slightly sharper, more precise corners */
   }
 }
 

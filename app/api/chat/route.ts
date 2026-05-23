@@ -6,50 +6,19 @@ import { convertToModelMessages, streamText } from 'ai'
 import type { ChatMessage, ChatMessageMetadata } from '@/lib/chat'
 import { isSupportedModel, getProviderForModel } from '@/lib/models'
 
-export const runtime = 'edge'
+export const runtime = 'nodejs'
 export const maxDuration = 60
 
-// Simple in-memory rate limiter: max 20 requests per minute per API key
-// (Keeping this for basic flood protection, even though it's a local app)
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
-const RATE_LIMIT_WINDOW_MS = 60_000
-const RATE_LIMIT_MAX = 50 // Increased for local use
-
-function checkRateLimit(key: string): boolean {
-  const now = Date.now()
-
-  if (rateLimitMap.size > 100) {
-    for (const [k, entry] of rateLimitMap) {
-      if (now > entry.resetAt) {
-        rateLimitMap.delete(k)
-      }
-    }
-  }
-
-  const entry = rateLimitMap.get(key)
-
-  if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(key, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS })
-    return true
-  }
-
-  if (entry.count >= RATE_LIMIT_MAX) {
-    return false
-  }
-
-  entry.count++
-  return true
-}
-
-function createModelInstance(provider: string, modelId: string, apiKey: string) {
+function createModelInstance(provider: string, modelId: string, apiKey: string, req: Request) {
   switch (provider) {
     case 'openrouter': {
       const openrouter = createOpenAI({
         apiKey,
         baseURL: 'https://openrouter.ai/api/v1',
+        // @ts-expect-error - compatibility exists in newer ai-sdk versions
         compatibility: 'compatible',
         headers: {
-          'HTTP-Referer': 'http://localhost:3000',
+          'HTTP-Referer': req.headers.get('origin') || req.headers.get('referer') || 'http://localhost:3000',
           'X-Title': 'Holocron Chat',
         }
       })
@@ -71,6 +40,7 @@ function createModelInstance(provider: string, modelId: string, apiKey: string) 
       const groq = createOpenAI({
         apiKey,
         baseURL: 'https://api.groq.com/openai/v1',
+        // @ts-expect-error - compatibility exists in newer ai-sdk versions
         compatibility: 'compatible',
       })
       return groq(modelId)
@@ -118,17 +88,13 @@ export async function POST(req: Request) {
       )
     }
 
-    if (!checkRateLimit(apiKey)) {
-      return Response.json({ error: 'Too many requests. Please wait a moment.' }, { status: 429 })
-    }
-
     const assistantMetadata: ChatMessageMetadata = {
       createdAt: new Date().toISOString(),
       model,
     }
 
     const result = streamText({
-      model: createModelInstance(provider, model, apiKey) as AnyModel,
+      model: createModelInstance(provider, model, apiKey, req) as AnyModel,
       messages: convertToModelMessages(messages),
       system:
         'You are Holocron, a clear and practical AI assistant. Use concise markdown and short paragraphs when helpful. Provide detailed answers to complex topics.',

@@ -34,7 +34,8 @@ function runTransaction<T>(
       const store = transaction.objectStore(STORE_NAME)
       const request = callback(store)
 
-      request.onsuccess = () => resolve(request.result)
+      transaction.oncomplete = () => resolve(request.result)
+      transaction.onerror = () => reject(transaction.error)
       request.onerror = () => reject(request.error)
     })
   })

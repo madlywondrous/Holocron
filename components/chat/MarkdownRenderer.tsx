@@ -24,6 +24,10 @@ function CodeBlockCopyButton({ code }: { code: string }) {
       // Fallback for insecure context
       const textArea = document.createElement('textarea')
       textArea.value = code
+      textArea.style.position = 'fixed'
+      textArea.style.top = '0'
+      textArea.style.left = '0'
+      textArea.style.opacity = '0'
       document.body.appendChild(textArea)
       textArea.select()
       document.execCommand('copy')
@@ -148,7 +152,7 @@ const rehypePlugins = [
 ] as unknown as NonNullable<ReactMarkdownOptions['rehypePlugins']>
 const remarkPlugins = [remarkGfm, remarkMath] as unknown as NonNullable<ReactMarkdownOptions['remarkPlugins']>
 
-export function MarkdownRenderer({ content, className }: MarkdownRendererProps) {
+export const MarkdownRenderer = React.memo(function MarkdownRenderer({ content, className }: MarkdownRendererProps) {
   const processedContent = useMemo(() => {
     if (!content) {
       return ''
@@ -161,11 +165,11 @@ export function MarkdownRenderer({ content, className }: MarkdownRendererProps) 
     return null
   }
 
-  return (
+      return (
     <div className={cn('markdown-body text-base leading-relaxed', className)}>
       <ReactMarkdown remarkPlugins={remarkPlugins} rehypePlugins={rehypePlugins} components={markdownComponents}>
         {processedContent}
       </ReactMarkdown>
     </div>
   )
-}
+})

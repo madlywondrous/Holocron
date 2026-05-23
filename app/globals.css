@@ -147,35 +147,67 @@
 
 @layer base {
   :root {
-    /* Opencode-inspired sleek dark theme */
-    --background: 0 0% 3%;            /* Near pure black */
-    --foreground: 0 0% 93%;           /* Soft white text */
-    --card: 0 0% 6%;                  /* Very dark gray card */
-    --card-foreground: 0 0% 93%;
-    --popover: 0 0% 6%;
-    --popover-foreground: 0 0% 93%;
+    /* Sleek Zinc-inspired Light Theme */
+    --background: 0 0% 100%;          /* Pure white main background */
+    --foreground: 240 6% 10%;         /* Very dark zinc text */
+    --card: 240 5% 98%;               /* Soft zinc for panels/cards */
+    --card-foreground: 240 6% 10%;
+    --popover: 240 5% 98%;
+    --popover-foreground: 240 6% 10%;
     
-    /* Primary buttons (White) */
-    --primary: 0 0% 93%;
-    --primary-foreground: 0 0% 9%;
+    /* Primary buttons */
+    --primary: 240 6% 10%;
+    --primary-foreground: 0 0% 98%;
     
-    /* Secondary/Muted */
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 93%;
-    --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 60%;
+    /* Secondary/Muted elements */
+    --secondary: 240 5% 94%;          /* Subtle hover backgrounds */
+    --secondary-foreground: 240 6% 10%;
+    --muted: 240 5% 94%;
+    --muted-foreground: 240 4% 46%;   /* Readable muted text */
     
-    /* Accent (Subtle highlight) */
-    --accent: 0 0% 15%;            
-    --accent-foreground: 0 0% 93%;
+    /* Accent elements */
+    --accent: 240 5% 90%;            
+    --accent-foreground: 240 6% 10%;
     
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 93%;
+    --destructive-foreground: 0 0% 98%;
     
-    --border: 0 0% 15%;               /* Subtle, tight borders */
-    --input: 0 0% 15%;
-    --ring: 0 0% 93%;                 /* White focus ring */
-    --radius: 0.35rem;                /* Slightly sharper, more precise corners */
+    --border: 240 6% 90%;             /* Clean barely-there borders */
+    --input: 240 6% 90%;
+    --ring: 240 6% 10%;               /* High contrast focus ring */
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* Sleek Zinc-inspired Dark Theme (matching the IDE screenshot) */
+    --background: 240 5% 6%;          /* Deepest zinc (#0f0f11) for main area */
+    --foreground: 240 5% 90%;         /* Soft gray-white text (#e4e4e7) */
+    --card: 240 4% 9%;                /* Slightly elevated zinc (#161618) for panels */
+    --card-foreground: 240 5% 90%;
+    --popover: 240 4% 9%;
+    --popover-foreground: 240 5% 90%;
+    
+    /* Primary buttons */
+    --primary: 0 0% 95%;
+    --primary-foreground: 240 6% 10%;
+    
+    /* Secondary/Muted elements */
+    --secondary: 240 4% 16%;          /* Subtle hover backgrounds (#27272a) */
+    --secondary-foreground: 240 5% 90%;
+    --muted: 240 4% 16%;
+    --muted-foreground: 240 5% 65%;   /* Readable muted text (#a1a1aa) */
+    
+    /* Accent elements */
+    --accent: 240 4% 20%;             /* Active/highlighted elements */
+    --accent-foreground: 240 5% 90%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 95%;
+    
+    --border: 240 5% 16%;             /* Deep borders (#27272a) */
+    --input: 240 5% 16%;
+    --ring: 240 5% 90%;               /* High contrast focus ring */
+    --radius: 0.5rem;
   }
 }
 
@@ -192,6 +224,19 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+  }
+  
+  /* Premium text selection */
+  ::selection {
+    background: hsl(var(--primary) / 0.2);
+    color: hsl(var(--foreground));
+  }
+  
+  /* Global smooth focus outlines */
+  *:focus-visible {
+    outline: 2px solid hsl(var(--ring) / 0.5);
+    outline-offset: 2px;
+    transition: outline-color 0.2s ease, outline-offset 0.2s ease;
   }
 
   
@@ -249,22 +294,23 @@
   .spotlight-backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(10, 10, 12, 0.55);
-    backdrop-filter: blur(22px) saturate(135%);
-    animation: spotlight-fade 0.18s ease-out forwards;
+    background: rgba(var(--background-rgb, 10, 10, 12), 0.55);
+    backdrop-filter: blur(24px) saturate(140%);
+    animation: spotlight-fade 0.2s ease-out forwards;
   }
 
   .spotlight-panel {
     position: relative;
     width: min(680px, calc(100vw - 2.5rem));
-    border-radius: 0.85rem;
+    border-radius: 1rem;
     border: 1px solid hsla(var(--border), 0.55);
-    background-color: hsl(var(--card));
+    background-color: hsl(var(--card) / 0.95);
+    backdrop-filter: blur(20px);
     box-shadow:
-      0 18px 44px -18px rgba(15, 23, 42, 0.55),
-      0 6px 18px -12px rgba(15, 23, 42, 0.35),
-      inset 0 0 0 1px hsla(var(--foreground), 0.06);
-    animation: spotlight-pop 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+      0 24px 48px -12px rgba(0, 0, 0, 0.25),
+      0 12px 24px -8px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 0 hsla(var(--foreground), 0.05);
+    animation: spotlight-pop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .command-dial {

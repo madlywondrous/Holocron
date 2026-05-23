@@ -4,6 +4,7 @@ import { useMemo, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { useChatStore } from '@/lib/store'
 import { cn } from '@/lib/utils'
+import { ThemeToggle } from '@/components/chat/ThemeToggle'
 
 interface TopBarProps {
   onToggleTimeline?: () => void
@@ -75,6 +76,8 @@ export function TopBar({ onToggleTimeline, showTimeline }: TopBarProps = {}) {
         </div>
 
         <div className="flex items-center gap-1">
+          <ThemeToggle />
+          
           <Button
             variant="ghost"
             size="icon"

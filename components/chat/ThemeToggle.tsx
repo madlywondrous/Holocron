@@ -9,7 +9,7 @@ import { Sun, Moon, Monitor, SlidersHorizontal } from 'lucide-react'
 export function ThemeToggle() {
   const [open, setOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
-  const { theme, setTheme, resolvedTheme } = useTheme()
+  const { theme, setTheme } = useTheme()
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {

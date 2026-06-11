@@ -31,7 +31,6 @@ export function Sidebar() {
   const [renamingTabId, setRenamingTabId] = React.useState<string | null>(null)
   const [renameValue, setRenameValue] = React.useState('')
   const [deletingTabId, setDeletingTabId] = React.useState<string | null>(null)
-  const inputRef = React.useRef<HTMLInputElement>(null)
 
   const activeSession = React.useMemo(
     () => sessions.find((session) => session.id === activeSessionId),

@@ -48,8 +48,7 @@ function createModelInstance(provider: string, modelId: string, apiKey: string, 
     case 'google':
     default: {
       const google = createGoogleGenerativeAI({ apiKey })
-      const useSearchGrounding = modelId.includes('flash') ? true : undefined
-      return google(modelId, { useSearchGrounding })
+      return google(modelId)
     }
   }
 }

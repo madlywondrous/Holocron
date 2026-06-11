@@ -1,5 +1,4 @@
 import React, { useRef } from 'react'
-import Image from 'next/image'
 import { MessageInput } from './MessageInput'
 import { MessageList } from './MessageList'
 import { useChat } from '@/hooks/useChat'

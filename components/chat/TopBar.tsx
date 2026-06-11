@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useCallback } from 'react'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { useChatStore } from '@/lib/store'
 import { cn } from '@/lib/utils'
@@ -18,9 +19,6 @@ export function TopBar({ onToggleTimeline, showTimeline }: TopBarProps = {}) {
   const sidebarCollapsed = useChatStore((s) => s.sidebarCollapsed)
   const setSidebarCollapsed = useChatStore((s) => s.setSidebarCollapsed)
   const setShowSettings = useChatStore((s) => s.setShowSettings)
-  const setShowSessionPalette = useChatStore((s) => s.setShowSessionPalette)
-  const setShowSearchPalette = useChatStore((s) => s.setShowSearchPalette)
-
   const activeSession = useMemo(
     () => sessions.find((session) => session.id === activeSessionId),
     [activeSessionId, sessions],
@@ -36,23 +34,9 @@ export function TopBar({ onToggleTimeline, showTimeline }: TopBarProps = {}) {
 
   const tabName = activeTab?.name ?? 'New Tab'
 
-  const handleOpenSessions = useCallback(() => {
-    setShowSearchPalette(false)
-    setShowSettings(false)
-    setShowSessionPalette(true)
-  }, [setShowSearchPalette, setShowSettings, setShowSessionPalette])
-
-  const handleOpenSearch = useCallback(() => {
-    setShowSessionPalette(false)
-    setShowSettings(false)
-    setShowSearchPalette(true)
-  }, [setShowSessionPalette, setShowSettings, setShowSearchPalette])
-
   const handleOpenSettings = useCallback(() => {
-    setShowSessionPalette(false)
-    setShowSearchPalette(false)
     setShowSettings(true)
-  }, [setShowSessionPalette, setShowSearchPalette, setShowSettings])
+  }, [setShowSettings])
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/90 backdrop-blur-xl">
@@ -66,7 +50,7 @@ export function TopBar({ onToggleTimeline, showTimeline }: TopBarProps = {}) {
             aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
-            <img src="/holocron-icon.png" alt="App Icon" className="h-[22px] w-[22px] invert dark:invert-0 opacity-80 group-hover:hidden transition-opacity" />
+            <Image src="/holocron-icon.png" alt="App Icon" width={22} height={22} className="h-[22px] w-[22px] invert dark:invert-0 opacity-80 group-hover:hidden transition-opacity" />
             <span className="material-symbols-outlined text-2xl hidden group-hover:block">
               {sidebarCollapsed ? 'dock_to_right' : 'dock_to_left'}
             </span>
